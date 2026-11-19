@@ -100,6 +100,27 @@
     width: 100%;
   }
 
+  .projects-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .project-search-box {
+    max-width: 100%;
+  }
+
+  .project-body,
+  .contact-info-card,
+  .contact-form-card {
+    padding: 1.25rem;
+  }
+
+  .label-row {
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.35rem;
+  }
+
   .footer-container {
     flex-direction: column;
     align-items: flex-start;

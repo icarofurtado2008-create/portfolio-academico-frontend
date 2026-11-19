@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Portfólio acadêmico de Ícaro Furtado, estudante de Engenharia de Software e desenvolvedor de soluções web.">
   <title>Ícaro Furtado | Portfólio Acadêmico — Engenharia de Software</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <script src="js/data.js" defer></script>
+  <script src="js/validation.js" defer></script>
   <script src="js/projects.js" defer></script>
+  <script src="js/form.js" defer></script>
   <script src="js/main.js" defer></script>
 </head>
 <body>
@@ -210,12 +214,42 @@
           <p class="section-eyebrow">Projetos</p>
           <h2 id="projetos-title" class="section-title">Projetos de referência</h2>
           <p class="section-subtitle">
-            Catálogo renderizado dinamicamente via JavaScript a partir de um array estruturado de dados. Links de demonstração e repositório serão vinculados apenas quando confirmados.
+            Catálogo renderizado dinamicamente via JavaScript, com filtragem por categoria, busca por palavra-chave e contagem acessível de resultados.
           </p>
         </header>
 
-        <div class="projects-grid" id="projects-grid" aria-live="polite">
-          <!-- Cards renderizados por js/main.js a partir de js/projects.js -->
+        <div class="projects-controls" aria-label="Filtros de projetos">
+          <div
+            class="project-filters"
+            id="project-filters"
+            role="group"
+            aria-label="Filtrar projetos por categoria"
+          ></div>
+
+          <div class="project-search-box">
+            <label for="project-search" class="sr-only">Buscar projetos por palavra-chave</label>
+            <input
+              type="search"
+              id="project-search"
+              class="search-input"
+              placeholder="Buscar por nome ou área..."
+              autocomplete="off"
+            >
+          </div>
+        </div>
+
+        <p class="projects-count" id="projects-count" aria-live="polite"></p>
+
+        <div class="projects-grid" id="projects-grid">
+          <!-- Cards renderizados por js/projects.js -->
+        </div>
+
+        <div class="projects-empty" id="projects-empty" hidden>
+          <p class="projects-empty-title">Nenhum projeto encontrado para os critérios selecionados.</p>
+          <p class="projects-empty-text">Tente outro termo de busca ou redefina os filtros para visualizar todos os projetos.</p>
+          <button type="button" class="btn btn-secondary btn-sm" id="reset-filters-btn">
+            Limpar filtros
+          </button>
         </div>
         <noscript>
           <p class="noscript-notice">
@@ -230,18 +264,21 @@
       <div class="container">
         <header class="section-header">
           <p class="section-eyebrow">Contato</p>
-          <h2 id="contato-title" class="section-title">Canais e estrutura inicial</h2>
+          <h2 id="contato-title" class="section-title">Formulário de contato</h2>
           <p class="section-subtitle">
-            Seção preparada na V1 para receber, nas próximas etapas da disciplina, o formulário completo com validação rigorosa e estados de processamento.
+            Envie uma mensagem utilizando o formulário validado abaixo ou acesse meu portfólio profissional.
           </p>
         </header>
 
         <div class="contact-grid">
           <div class="contact-info-card">
-            <h3 class="contact-card-title">Links confirmados</h3>
+            <h3 class="contact-card-title">Canais e aviso de simulação</h3>
             <p class="contact-card-text">
-              Enquanto o formulário interativo é planejado para as etapas seguintes da auditoria, você pode acessar meu portfólio profissional para referências adicionais.
+              Este formulário utiliza validação no navegador e simulação assíncrona determinística para fins de avaliação acadêmica.
             </p>
+            <div class="simulation-notice" role="note">
+              <strong>Aviso explícito:</strong> nenhum e-mail real é enviado ao submeter este formulário.
+            </div>
             <ul class="contact-links">
               <li>
                 <span class="contact-label">Portfólio Profissional</span>
@@ -257,18 +294,128 @@
             </ul>
           </div>
 
-          <div class="contact-future-card" aria-label="Estrutura reservada para o formulário de contato">
-            <div class="future-badge">Etapa futura do projeto</div>
-            <h3 class="contact-card-title">Espaço reservado para formulário</h3>
-            <p class="contact-card-text">
-              Esta área receberá o formulário completo exigido no roteiro da disciplina, incluindo:
-            </p>
-            <ul class="future-checklist">
-              <li>Campos estruturados (Nome, E-mail, Assunto e Mensagem)</li>
-              <li>Regras de validação no cliente com feedback acessível</li>
-              <li>Estados visuais de processamento, sucesso e erro</li>
-            </ul>
-          </div>
+          <form class="contact-form-card" id="contact-form" novalidate>
+            <div class="form-group">
+              <label for="contact-nome" class="form-label">
+                Nome completo <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="contact-nome"
+                name="nome"
+                class="form-control"
+                maxlength="100"
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="error-nome"
+                placeholder="Ex.: Maria Oliveira"
+              >
+              <p class="field-error" id="error-nome" role="alert"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-email" class="form-label">
+                E-mail <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="email"
+                id="contact-email"
+                name="email"
+                class="form-control"
+                maxlength="120"
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="error-email"
+                placeholder="Ex.: nome@dominio.com"
+              >
+              <p class="field-error" id="error-email" role="alert"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-motivo" class="form-label">
+                Motivo do contato <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <select
+                id="contact-motivo"
+                name="motivo"
+                class="form-control"
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="error-motivo"
+              >
+                <option value="">Selecione uma opção</option>
+                <option value="Dúvida acadêmica">Dúvida acadêmica</option>
+                <option value="Proposta de projeto">Proposta de projeto</option>
+                <option value="Feedback técnico">Feedback técnico</option>
+                <option value="Outro">Outro</option>
+              </select>
+              <p class="field-error" id="error-motivo" role="alert"></p>
+            </div>
+
+            <div class="form-group" id="outro-motivo-group" hidden aria-hidden="true">
+              <label for="contact-outro-motivo" class="form-label">
+                Especifique o motivo <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="contact-outro-motivo"
+                name="outroMotivo"
+                class="form-control"
+                maxlength="80"
+                aria-invalid="false"
+                aria-describedby="error-outro-motivo"
+                placeholder="Descreva brevemente o assunto"
+              >
+              <p class="field-error" id="error-outro-motivo" role="alert"></p>
+            </div>
+
+            <div class="form-group">
+              <div class="label-row">
+                <label for="contact-mensagem" class="form-label">
+                  Mensagem <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <span class="char-counter" id="mensagem-counter" aria-live="polite">
+                  0 / 500 caracteres
+                </span>
+              </div>
+              <textarea
+                id="contact-mensagem"
+                name="mensagem"
+                class="form-control form-textarea"
+                rows="4"
+                maxlength="500"
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="error-mensagem"
+                placeholder="Escreva sua mensagem (mínimo de 10 caracteres)"
+              ></textarea>
+              <p class="field-error" id="error-mensagem" role="alert"></p>
+            </div>
+
+            <fieldset class="sim-fieldset">
+              <legend class="sim-legend">Controle de simulação determinística</legend>
+              <div class="sim-options">
+                <label class="sim-option">
+                  <input type="radio" name="sim-outcome" value="success" checked>
+                  <span>Simular sucesso</span>
+                </label>
+                <label class="sim-option">
+                  <input type="radio" name="sim-outcome" value="error">
+                  <span>Simular falha (preserva dados)</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="form-status" id="form-status" role="status" aria-live="polite" hidden></div>
+
+            <button type="submit" class="btn btn-primary btn-submit" id="contact-submit">
+              Enviar mensagem
+            </button>
+          </form>
         </div>
       </div>
     </section>
